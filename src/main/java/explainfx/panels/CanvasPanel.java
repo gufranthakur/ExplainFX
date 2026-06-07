@@ -4,6 +4,7 @@ import explainfx.ExplainFX;
 import explainfx.drawables.CircleDrawable;
 import explainfx.drawables.Drawable;
 import explainfx.drawables.SquareDrawable;
+import explainfx.drawables.StrokeDrawable;
 import explainfx.managers.DrawableManager;
 import explainfx.menus.DrawableMenu;
 import javafx.scene.Group;
@@ -43,6 +44,7 @@ public class CanvasPanel extends Group {
 
     private SquareDrawable activeSquare;
     private CircleDrawable activeCircle;
+    private StrokeDrawable activeStroke;
 
     private final int canvasSize = 3000;
 
@@ -68,20 +70,21 @@ public class CanvasPanel extends Group {
                 return;
             }
 
+            anchorX = e.getX();
+            anchorY = e.getY();
+
             if (drawableState == DrawableState.SHAPE_SQUARE) {
-                anchorX = e.getX();
-                anchorY = e.getY();
                 activeSquare = new SquareDrawable(this, anchorX, anchorY, 0, 0);
                 this.getChildren().add(activeSquare);
                 addDrawableToList(activeSquare);
             } else if (drawableState == DrawableState.SHAPE_CIRCLE) {
-
-                anchorX = e.getX();
-                anchorY = e.getY();
-
                 activeCircle = new CircleDrawable(this, anchorX, anchorY, 0, 0);
                 this.getChildren().add(activeCircle);
                 addDrawableToList(activeCircle);
+            } else if (drawableState == DrawableState.STROKE) {
+                activeStroke = new StrokeDrawable(this, anchorX, anchorY);
+                this.getChildren().add(activeStroke);
+                addDrawableToList(activeStroke);
             }
         });
 
@@ -106,6 +109,12 @@ public class CanvasPanel extends Group {
 
                 activeCircle.update(width, height);
 
+            } else if (drawableState == DrawableState.STROKE) {
+
+                if (activeStroke == null) return;
+
+                activeStroke.addPoint(e.getX(), e.getY());
+
             }
 
         });
@@ -113,6 +122,7 @@ public class CanvasPanel extends Group {
         this.setOnMouseReleased(e -> {
             activeSquare = null;
             activeCircle = null;
+            activeStroke = null;
         });
 
         createUI();

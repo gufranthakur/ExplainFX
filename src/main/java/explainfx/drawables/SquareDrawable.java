@@ -9,7 +9,7 @@ public class SquareDrawable extends Drawable{
 
     private Rectangle rectangle;
 
-    private double dragOffSetX, dragOffSetY;
+
 
     public SquareDrawable(CanvasPanel canvasPanel, double x, double y, float width, float height) {
         super(canvasPanel, x, y, width, height);
@@ -31,18 +31,7 @@ public class SquareDrawable extends Drawable{
             canvasPanel.setSelectedDrawable(null);
         });
 
-        this.setOnMousePressed(e -> {
-            dragOffSetX = e.getX();
-            dragOffSetY = e.getY();
 
-        });
-
-        this.setOnMouseDragged(e -> {
-            if (canvasPanel.getDrawableState() != CanvasPanel.DrawableState.NONE) return;
-            this.setLayoutX(this.getLayoutX() + e.getX() - dragOffSetX);
-            this.setLayoutY(this.getLayoutY() + e.getY() - dragOffSetY);
-            e.consume();
-        });
     }
 
     public void update(double x, double y, double width, double height) {

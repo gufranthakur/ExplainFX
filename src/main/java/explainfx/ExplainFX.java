@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -52,7 +53,7 @@ public class ExplainFX extends Application {
     }
 
     public void createWindow(Stage stage) {
-        Scene rootScene = new Scene(rootPane, 1200, 780);
+        Scene rootScene = new Scene(rootPane, 1200, 780, true, SceneAntialiasing.BALANCED);
         stage = new Stage();
         stage.setScene(rootScene);
         stage.setTitle("ExplainFX");

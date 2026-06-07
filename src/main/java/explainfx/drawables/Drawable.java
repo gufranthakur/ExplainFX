@@ -11,6 +11,7 @@ public abstract class Drawable extends Group {
     private double width, height;
 
 
+    protected double dragOffSetX, dragOffSetY;
     protected Color borderColor = Color.WHITE;
 
 
@@ -30,6 +31,19 @@ public abstract class Drawable extends Group {
         this.setOnMouseExited(e -> {
             borderColor = Color.WHITE;
             System.out.println("Exited");
+        });
+
+        this.setOnMousePressed(e -> {
+            dragOffSetX = e.getX();
+            dragOffSetY = e.getY();
+
+        });
+
+        this.setOnMouseDragged(e -> {
+            if (canvasPanel.getDrawableState() != CanvasPanel.DrawableState.NONE) return;
+            this.setLayoutX(this.getLayoutX() + e.getX() - dragOffSetX);
+            this.setLayoutY(this.getLayoutY() + e.getY() - dragOffSetY);
+            e.consume();
         });
     }
 
