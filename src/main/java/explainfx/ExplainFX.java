@@ -66,4 +66,5 @@ public class ExplainFX extends Application {
     public DrawableManager getDrawableManager() {
         return drawableManager;
     }
+
 }

@@ -1,7 +1,6 @@
 package explainfx.panels;
 
 import explainfx.ExplainFX;
-import explainfx.managers.DrawableManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -19,7 +18,7 @@ public class ControlPanel extends VBox {
     private HBox toolbox;
     private HBox propertyBox;
 
-    private Button markerButton, eraserButton, textButton, imageButton, shapeButton;
+    private Button normalButton, markerButton , textButton, imageButton, squareButton, circleButton, arrowButton;
     private Slider sizeSlider;
     private Label sliderLabel;
     private Button colorButton;
@@ -41,11 +40,12 @@ public class ControlPanel extends VBox {
         toolbox = new HBox(10);
         propertyBox = new HBox(5);
 
+        normalButton = createIconButton("/cursor.png");
         markerButton = createIconButton("/marker.png");
-        eraserButton = createIconButton("/eraser.png");
         textButton = createIconButton("/text.png");
         imageButton = createIconButton("/image.png");
-        shapeButton = createIconButton("/shapes.png");
+        squareButton = createIconButton("/square.png");
+        circleButton = createIconButton("/circles.png");
         colorButton = createIconButton("/color.png");
 
         sizeSlider = new Slider();
@@ -53,13 +53,13 @@ public class ControlPanel extends VBox {
     }
 
     private void createListeners() {
+
+        normalButton.setOnAction(e -> explainFX.getCanvasPanel().setDrawableState(CanvasPanel.DrawableState.NONE));
+
         markerButton.setOnAction(e -> {
             explainFX.getCanvasPanel().setDrawableState(CanvasPanel.DrawableState.STROKE);
         });
 
-        eraserButton.setOnAction(e -> {
-            explainFX.getCanvasPanel().setDrawableState(CanvasPanel.DrawableState.ERASE);
-        });
 
         textButton.setOnAction(e -> {
             explainFX.getCanvasPanel().setDrawableState(CanvasPanel.DrawableState.TEXT);
@@ -69,18 +69,23 @@ public class ControlPanel extends VBox {
             explainFX.getCanvasPanel().setDrawableState(CanvasPanel.DrawableState.IMAGE);
         });
 
-        shapeButton.setOnAction(e -> {
+        squareButton.setOnAction(e -> {
             explainFX.getCanvasPanel().setDrawableState(CanvasPanel.DrawableState.SHAPE_SQUARE);
+        });
+
+        circleButton.setOnAction(e -> {
+            explainFX.getCanvasPanel().setDrawableState(CanvasPanel.DrawableState.SHAPE_CIRCLE);
         });
     }
 
     public void addComponents() {
         toolbox.setAlignment(Pos.CENTER);
+        toolbox.getChildren().add(normalButton);
         toolbox.getChildren().add(markerButton);
-        toolbox.getChildren().add(eraserButton);
         toolbox.getChildren().add(textButton);
         toolbox.getChildren().add(imageButton);
-        toolbox.getChildren().add(shapeButton);
+        toolbox.getChildren().add(squareButton);
+        toolbox.getChildren().add(circleButton);
 
         propertyBox.getChildren().add(sliderLabel);
         propertyBox.getChildren().add(sizeSlider);

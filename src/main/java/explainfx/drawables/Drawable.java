@@ -14,7 +14,7 @@ public abstract class Drawable extends Group {
     protected Color borderColor = Color.WHITE;
 
 
-    public Drawable(CanvasPanel canvasPanel, double x, double y, float width, float height) {
+    public Drawable(CanvasPanel canvasPanel, double x, double y, double width, double height) {
         this.x = x;
         this.y = y;
         this.width = width;
