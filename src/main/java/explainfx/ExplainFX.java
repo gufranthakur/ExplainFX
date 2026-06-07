@@ -58,4 +58,12 @@ public class ExplainFX extends Application {
         stage.setTitle("ExplainFX");
         stage.show();
     }
+
+    public CanvasPanel getCanvasPanel() {
+        return canvasPanel;
+    }
+
+    public DrawableManager getDrawableManager() {
+        return drawableManager;
+    }
 }

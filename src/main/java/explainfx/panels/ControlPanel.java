@@ -1,6 +1,7 @@
 package explainfx.panels;
 
 import explainfx.ExplainFX;
+import explainfx.managers.DrawableManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -32,6 +33,7 @@ public class ControlPanel extends VBox {
         this.setMaxWidth(500);
 
         createUI();
+        createListeners();
         addComponents();
     }
 
@@ -48,6 +50,28 @@ public class ControlPanel extends VBox {
 
         sizeSlider = new Slider();
         sliderLabel = new Label("Size");
+    }
+
+    private void createListeners() {
+        markerButton.setOnAction(e -> {
+            explainFX.getCanvasPanel().setDrawableState(CanvasPanel.DrawableState.STROKE);
+        });
+
+        eraserButton.setOnAction(e -> {
+            explainFX.getCanvasPanel().setDrawableState(CanvasPanel.DrawableState.ERASE);
+        });
+
+        textButton.setOnAction(e -> {
+            explainFX.getCanvasPanel().setDrawableState(CanvasPanel.DrawableState.TEXT);
+        });
+
+        imageButton.setOnAction(e -> {
+            explainFX.getCanvasPanel().setDrawableState(CanvasPanel.DrawableState.IMAGE);
+        });
+
+        shapeButton.setOnAction(e -> {
+            explainFX.getCanvasPanel().setDrawableState(CanvasPanel.DrawableState.SHAPE_SQUARE);
+        });
     }
 
     public void addComponents() {

@@ -2,14 +2,19 @@ package explainfx.drawables;
 
 import explainfx.panels.CanvasPanel;
 import javafx.scene.Group;
+import javafx.scene.paint.Color;
 
 public abstract class Drawable extends Group {
 
     private CanvasPanel canvasPanel;
-    private float x, y;
-    private float width, height;
+    private double x, y;
+    private double width, height;
 
-    public Drawable(CanvasPanel canvasPanel, float x, float y, float width, float height) {
+
+    protected Color borderColor = Color.WHITE;
+
+
+    public Drawable(CanvasPanel canvasPanel, double x, double y, float width, float height) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -18,40 +23,47 @@ public abstract class Drawable extends Group {
 
         this.setOnMouseEntered(e -> {
             canvasPanel.setSelectedDrawable(this);
+            System.out.println("Entered");
+            borderColor = Color.RED;
+        });
+
+        this.setOnMouseExited(e -> {
+            borderColor = Color.WHITE;
+            System.out.println("Exited");
         });
     }
 
     //----------Getters and setters-------------//
 
-    public float getX() {
+    public double getX() {
         return x;
     }
 
-    public void setX(float x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public float getY() {
+    public double getY() {
         return y;
     }
 
-    public void setY(float y) {
+    public void setY(double y) {
         this.y = y;
     }
 
-    public float getWidth() {
+    public double getWidth() {
         return width;
     }
 
-    public void setWidth(float width) {
+    public void setWidth(double width) {
         this.width = width;
     }
 
-    public float getHeight() {
+    public double getHeight() {
         return height;
     }
 
-    public void setHeight(float height) {
+    public void setHeight(double height) {
         this.height = height;
     }
 
