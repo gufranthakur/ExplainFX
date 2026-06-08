@@ -29,6 +29,12 @@ public class DrawableMenu extends ContextMenu {
 
         copyItem.setOnAction(e -> canvasPanel.setCopiedDrawable(canvasPanel.getSelectedDrawable()));
         pasteItem.setOnAction(e -> canvasPanel.pasteCopiedDrawable(x, y));
+
+        duplicateItem.setOnAction(e -> {
+            canvasPanel.setCopiedDrawable(canvasPanel.getSelectedDrawable());
+            canvasPanel.pasteCopiedDrawable(canvasPanel.getCopiedDrawable().getX() + 100, canvasPanel.getCopiedDrawable().getY() + 100);
+        });
+
         deleteItem.setOnAction(e -> deleteDrawableItem());
         lockItem.setOnAction(e -> canvasPanel.getSelectedDrawable().lockDrawable());
         unlockItem.setOnAction(e -> canvasPanel.getSelectedDrawable().unlockDrawable());

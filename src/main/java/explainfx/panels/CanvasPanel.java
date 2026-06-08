@@ -167,21 +167,19 @@ public class CanvasPanel extends Group {
         Drawable duplicatedDrawable = copiedDrawable;
 
         switch (duplicatedDrawable) {
-            case SquareDrawable squareDrawable -> duplicatedDrawable = ((SquareDrawable) copiedDrawable).duplicate(x, y);
-            case CircleDrawable circleDrawable -> duplicatedDrawable = ((CircleDrawable) copiedDrawable).duplicate(x, y);
-            case TextDrawable textDrawable -> duplicatedDrawable = ((TextDrawable) copiedDrawable).duplicate(x, y);
+            case SquareDrawable ignored -> duplicatedDrawable = ((SquareDrawable) copiedDrawable).duplicate(x, y);
+            case CircleDrawable ignored -> duplicatedDrawable = ((CircleDrawable) copiedDrawable).duplicate(x, y);
+            case TextDrawable ignored -> duplicatedDrawable = ((TextDrawable) copiedDrawable).duplicate(x, y);
             case StrokeDrawable strokeDrawable -> duplicatedDrawable = ((StrokeDrawable) copiedDrawable).duplicate(x, y, strokeDrawable.getPolyline());
             default -> throw new IllegalStateException("Unexpected value: " + duplicatedDrawable);
         }
-
-
-
-
 
         drawables.add(duplicatedDrawable);
         this.getChildren().add(duplicatedDrawable);
 
     }
+
+
 
     public ArrayList<Drawable> getDrawables() {
         return drawables;
@@ -207,6 +205,10 @@ public class CanvasPanel extends Group {
 
     public void setCopiedDrawable(Drawable drawable) {
         this.copiedDrawable = drawable;
+    }
+
+    public Drawable getCopiedDrawable() {
+        return copiedDrawable;
     }
 
     public DrawableState getDrawableState() {
