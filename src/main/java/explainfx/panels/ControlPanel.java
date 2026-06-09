@@ -3,13 +3,12 @@ package explainfx.panels;
 import explainfx.ExplainFX;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 public class ControlPanel extends VBox {
 
@@ -48,7 +47,10 @@ public class ControlPanel extends VBox {
         circleButton = createIconButton("/circles.png");
         colorButton = createIconButton("/color.png");
 
-        sizeSlider = new Slider();
+        sizeSlider = new Slider(2, 15, 2);
+        sizeSlider.setShowTickLabels(true);
+        sizeSlider.setShowTickMarks(true);
+        sizeSlider.setMajorTickUnit(2);
         sliderLabel = new Label("Size");
     }
 
@@ -75,6 +77,28 @@ public class ControlPanel extends VBox {
 
         circleButton.setOnAction(e -> {
             explainFX.getCanvasPanel().setDrawableState(CanvasPanel.DrawableState.SHAPE_CIRCLE);
+        });
+
+        sizeSlider.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            explainFX.getCanvasPanel().setDrawableSize(newValue.intValue());
+        }));
+
+        colorButton.setOnAction(e -> {
+            ColorPicker picker = new ColorPicker(Color.WHITE);
+
+            Dialog<Color> dialog = new Dialog<>();
+            dialog.setTitle("Pick a Color");
+            dialog.getDialogPane().setContent(picker);
+            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+            dialog.setResultConverter(btn -> {
+                if (btn == ButtonType.OK) return picker.getValue();
+                return null;
+            });
+
+            dialog.showAndWait().ifPresent(color -> {
+                explainFX.getCanvasPanel().setDrawableColor(color);
+            });
         });
     }
 

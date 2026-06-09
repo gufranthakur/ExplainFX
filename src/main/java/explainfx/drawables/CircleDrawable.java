@@ -15,12 +15,12 @@ public class CircleDrawable extends Drawable {
         this.canvasPanel = canvasPanel;
         ellipse = new Ellipse(x, y, width, height);
         ellipse.setFill(Color.TRANSPARENT);
-        ellipse.setStroke(Color.WHITE);
-        ellipse.setStrokeWidth(2);
+        ellipse.setStroke(drawableColor);
+        ellipse.setStrokeWidth(canvasPanel.drawableSize);
         this.getChildren().add(ellipse);
 
         this.setOnMouseEntered(e -> {
-            ellipse.setStroke(Color.WHEAT);
+            ellipse.setStroke(hoveredColor);
             canvasPanel.setSelectedDrawable(this);
         });
 

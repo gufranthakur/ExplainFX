@@ -18,19 +18,17 @@ public class SquareDrawable extends Drawable{
         this.canvasPanel = canvasPanel;
         rectangle = new Rectangle(x, y, width, height);
         rectangle.setFill(Color.TRANSPARENT);
-        rectangle.setStroke(borderColor);
-        rectangle.setStrokeWidth(1.5);
+        rectangle.setStroke(drawableColor);
+        rectangle.setStrokeWidth(canvasPanel.drawableSize);
         this.getChildren().add(rectangle);
 
         this.setOnMouseEntered(e -> {
-            rectangle.setStroke(Color.WHEAT);
-
+            rectangle.setStroke(hoveredColor);
             canvasPanel.setSelectedDrawable(this);
         });
 
         this.setOnMouseExited(e -> {
-            rectangle.setStroke(Color.WHITE);
-
+            rectangle.setStroke(drawableColor);
             canvasPanel.setSelectedDrawable(null);
         });
 

@@ -47,6 +47,8 @@ public class CanvasPanel extends Group {
     private TextDrawable activeText;
 
     private final int canvasSize = 3000;
+    public int drawableSize = 2;
+    public Color selectedColor = Color.WHITE;
 
     public CanvasPanel(ExplainFX explainFX, DrawableManager drawableManager) {
         this.explainFX = explainFX;
@@ -212,6 +214,14 @@ public class CanvasPanel extends Group {
 
     public void setDrawableState(DrawableState state) {
         this.drawableState = state;
+    }
+
+    public void setDrawableSize(int size) {
+        this.drawableSize = size;
+    }
+
+    public void setDrawableColor(Color color) {
+        this.selectedColor = color;
     }
 
     public void setCopiedDrawable(Drawable drawable) {

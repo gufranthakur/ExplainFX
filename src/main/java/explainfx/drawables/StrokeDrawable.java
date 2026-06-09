@@ -15,14 +15,25 @@ public class StrokeDrawable extends Drawable{
         super(canvasPanel, x, y, 0, 0);
         this.canvasPanel = canvasPanel;
         polyline = new Polyline();
-        polyline.setStroke(Color.WHITE);
-        polyline.setStrokeWidth(5);
+        polyline.setStroke(drawableColor);
+        polyline.setStrokeWidth(canvasPanel.drawableSize);
         polyline.setSmooth(true);
         polyline.setStrokeLineCap(StrokeLineCap.ROUND);
         polyline.setStrokeLineJoin(StrokeLineJoin.ROUND);
         this.setLayoutX(x);
         this.setLayoutY(y);
         this.getChildren().add(polyline);
+
+        this.setOnMouseEntered(e -> {
+            polyline.setStroke(hoveredColor);
+            canvasPanel.setSelectedDrawable(this);
+        });
+
+        this.setOnMouseExited(e -> {
+            polyline.setStroke(drawableColor);
+            canvasPanel.setSelectedDrawable(null);
+        });
+
     }
     public StrokeDrawable(CanvasPanel canvasPanel, double x, double y, Polyline polyline) {
         super(canvasPanel, x, y, 0, 0);
@@ -31,6 +42,16 @@ public class StrokeDrawable extends Drawable{
         this.setLayoutX(x);
         this.setLayoutY(y);
         this.getChildren().add(polyline);
+
+        this.setOnMouseEntered(e -> {
+            polyline.setStroke(hoveredColor);
+            canvasPanel.setSelectedDrawable(this);
+        });
+
+        this.setOnMouseExited(e -> {
+            polyline.setStroke(drawableColor);
+            canvasPanel.setSelectedDrawable(null);
+        });
     }
 
     public void addPoint(double x, double y) {

@@ -2,6 +2,7 @@ package explainfx.drawables;
 
 import explainfx.panels.CanvasPanel;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import java.util.Optional;
@@ -29,6 +30,16 @@ public class TextDrawable extends Drawable {
 
         text = new Text(userInput);
         this.getChildren().add(text);
+
+        this.setOnMouseEntered(e -> {
+            text.setStroke(hoveredColor);
+            canvasPanel.setSelectedDrawable(this);
+        });
+
+        this.setOnMouseExited(e -> {
+            text.setStroke(drawableColor);
+            canvasPanel.setSelectedDrawable(null);
+        });
     }
 
     public TextDrawable(CanvasPanel canvasPanel, double x, double y, String copiedText) {

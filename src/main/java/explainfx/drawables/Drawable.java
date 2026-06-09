@@ -15,6 +15,9 @@ public abstract class Drawable extends Group {
     protected double dragOffSetX, dragOffSetY;
     protected Color borderColor = Color.WHITE;
 
+    protected Color hoveredColor = Color.rgb(237, 113, 104);
+    protected Color drawableColor;
+
 
     public Drawable(CanvasPanel canvasPanel, double x, double y, double width, double height) {
         this.x = x;
@@ -22,6 +25,8 @@ public abstract class Drawable extends Group {
         this.width = width;
         this.height = height;
         this.canvasPanel = canvasPanel;
+
+        this.drawableColor = canvasPanel.selectedColor;
 
         this.setOnMouseEntered(e -> {
             canvasPanel.setSelectedDrawable(this);
