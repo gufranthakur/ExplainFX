@@ -32,11 +32,9 @@ Download the *.dmg installer* in release section
 3. Within IntelliJ
 - Clone the repository ``` https://github.com/gufranthakur/ExplainFX.git ```
 - Download Java 21 (Eclipse Temurin JDK) from IntelliJ, if not installed
-- <img width="444" height="417" alt="image" src="https://github.com/user-attachments/assets/15359305-9741-48d7-8d08-1e92c15de575" />
+<img width="444" height="417" alt="image" src="https://github.com/user-attachments/assets/15359305-9741-48d7-8d08-1e92c15de575" />
 - In the gradle tab, *ExplainFX > Tasks > Application > Run*
 
-4. For Eclipse, Netbeans, VSCode
-https://www.jetbrains.com/idea/download/?section=windows
 
 ## Contributions 
 
