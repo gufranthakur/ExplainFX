@@ -10,8 +10,12 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class ExplainFX extends Application {
 
@@ -24,6 +28,14 @@ public class ExplainFX extends Application {
 
     public static void main(String[] args) {
         Application.setUserAgentStylesheet(new CupertinoDark().getUserAgentStylesheet());
+
+        if (Taskbar.isTaskbarSupported()) {
+            var taskbar = Taskbar.getTaskbar();
+            if (taskbar.isSupported(Taskbar.Feature.ICON_IMAGE)) {
+                taskbar.setIconImage(new ImageIcon(ExplainFX.class.getResource("/icon.png")).getImage());
+            }
+        }
+
         launch(args);
     }
 
