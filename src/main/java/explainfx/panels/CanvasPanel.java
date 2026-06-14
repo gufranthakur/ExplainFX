@@ -10,6 +10,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
 
@@ -186,16 +187,22 @@ public class CanvasPanel extends Group {
 
         Drawable duplicatedDrawable = copiedDrawable;
 
-        switch (duplicatedDrawable) {
-            case SquareDrawable ignored -> duplicatedDrawable = ((SquareDrawable) copiedDrawable).duplicate(x, y);
-            case CircleDrawable ignored -> duplicatedDrawable = ((CircleDrawable) copiedDrawable).duplicate(x, y);
-            case TextDrawable ignored -> duplicatedDrawable = ((TextDrawable) copiedDrawable).duplicate(x, y);
-            case StrokeDrawable strokeDrawable -> duplicatedDrawable = ((StrokeDrawable) copiedDrawable).duplicate(x, y, strokeDrawable.getPolyline());
-            default -> throw new IllegalStateException("Unexpected value: " + duplicatedDrawable);
-        }
+        try {
+            switch (duplicatedDrawable) {
+                case SquareDrawable ignored -> duplicatedDrawable = ((SquareDrawable) copiedDrawable).duplicate(x, y);
+                case CircleDrawable ignored -> duplicatedDrawable = ((CircleDrawable) copiedDrawable).duplicate(x, y);
+                case TextDrawable ignored -> duplicatedDrawable = ((TextDrawable) copiedDrawable).duplicate(x, y);
+                case StrokeDrawable strokeDrawable -> duplicatedDrawable = ((StrokeDrawable) copiedDrawable).duplicate(x, y, strokeDrawable.getPolyline());
+                default -> throw new IllegalStateException("Unexpected value: " + duplicatedDrawable);
+            }
 
-        drawables.add(duplicatedDrawable);
-        this.getChildren().add(duplicatedDrawable);
+            drawables.add(duplicatedDrawable);
+            this.getChildren().add(duplicatedDrawable);
+        } catch (NullPointerException e) {
+            System.out.println("User did not copy anything. Ignoring paste command.");
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
 
     }
 

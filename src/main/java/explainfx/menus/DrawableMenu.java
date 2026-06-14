@@ -33,6 +33,7 @@ public class DrawableMenu extends ContextMenu {
 
         duplicateItem.setOnAction(e -> {
             canvasPanel.setCopiedDrawable(canvasPanel.getSelectedDrawable());
+            if (canvasPanel.getCopiedDrawable() == null) return;
             canvasPanel.pasteCopiedDrawable(canvasPanel.getCopiedDrawable().getX() + 100, canvasPanel.getCopiedDrawable().getY() + 100);
         });
 
