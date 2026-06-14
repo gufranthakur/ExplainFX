@@ -17,7 +17,14 @@ It's a very basic canvas app with only the most basic features. I created this f
 ## Features to be added 
 1. Save and load files
 2. Edit or modify drawables after they have been drawn
-3. more shapes
+3. Stroke size adjustment preview
+4. Text preview, when adding text to canvas
+5. Undo / Redo
+6. Tooltips on UI elements
+7. Menubar
+8. Update notifications, when a new update is available
+9. Zoom in/out
+10. more shapes
 
 ## To run on your machine 
 
