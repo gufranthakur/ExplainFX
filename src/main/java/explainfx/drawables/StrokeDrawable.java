@@ -11,6 +11,10 @@ public class StrokeDrawable extends Drawable{
     private CanvasPanel canvasPanel;
     private Polyline polyline;
 
+    private double lastX = Double.NaN;
+    private double lastY = Double.NaN;
+    private static final double SMOOTHING = 0.3;
+
     public StrokeDrawable(CanvasPanel canvasPanel, double x, double y) {
         super(canvasPanel, x, y, 0, 0);
         this.canvasPanel = canvasPanel;
@@ -55,7 +59,20 @@ public class StrokeDrawable extends Drawable{
     }
 
     public void addPoint(double x, double y) {
-        polyline.getPoints().addAll(x - this.getLayoutX(), y - this.getLayoutY());
+        double localX = x - this.getLayoutX();
+        double localY = y - this.getLayoutY();
+
+        if (Double.isNaN(lastX)) {
+            // First point — no smoothing yet
+            lastX = localX;
+            lastY = localY;
+        } else {
+            // Exponential moving average
+            lastX = lastX + SMOOTHING * (localX - lastX);
+            lastY = lastY + SMOOTHING * (localY - lastY);
+        }
+
+        polyline.getPoints().addAll(lastX, lastY);
     }
 
     public StrokeDrawable duplicate(double x, double y, Polyline polyline) {
