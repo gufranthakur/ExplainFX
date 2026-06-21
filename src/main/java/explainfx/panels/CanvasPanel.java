@@ -2,151 +2,59 @@ package explainfx.panels;
 
 import explainfx.ExplainFX;
 import explainfx.drawables.*;
+import explainfx.handlers.MouseEventHandler;
 import explainfx.menus.DrawableMenu;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Objects;
 
 public class CanvasPanel extends Group {
 
 
     public enum DrawableState {
-        NONE,
-        STROKE,
-        ERASE,
-        TEXT,
-        IMAGE,
-        SHAPE_SQUARE,
-        SHAPE_CIRCLE,
-        SHAPE_ARROW
+        NONE, STROKE, TEXT, SHAPE_SQUARE, SHAPE_CIRCLE,
     }
 
+    // Core stuff
+
     public ExplainFX explainFX;
-    private DrawableMenu drawableMenu;
-
+    public DrawableMenu drawableMenu;
     private Canvas canvas;
-
-    private double panStartX, panStartY;
-    private double anchorX, anchorY;
     private Drawable selectedDrawable;
     private DrawableState drawableState;
-
     public ArrayList<Drawable> drawables;
-
     private Drawable copiedDrawable;
-
-    private SquareDrawable activeSquare;
-    private CircleDrawable activeCircle;
-    private StrokeDrawable activeStroke;
-    private TextDrawable activeText;
-    private String inputTextData;
+    // Active Elements, used for keeping track of what the user is drawing right now. //
+    public SquareDrawable activeSquare;
+    public CircleDrawable activeCircle;
+    public StrokeDrawable activeStroke;
+    public TextDrawable activeText;
+    public String inputTextData;
 
     private final int canvasSize = 3000;
     public int drawableSize = 5;
     public Circle strokeSizePreviewCircle;
     public Color selectedColor = Color.WHITE;
 
+    private MouseEventHandler mouseEventHandler;
+
     public CanvasPanel(ExplainFX explainFX) {
         this.explainFX = explainFX;
+
+        mouseEventHandler = new MouseEventHandler(this);
 
         drawableMenu = new DrawableMenu(this);
         drawables = new ArrayList<>(20);
 
         drawableState = DrawableState.NONE;
 
-        this.setOnMousePressed(e -> {
-
-            if (e.isPopupTrigger()) {
-                System.out.println("Yeouch");
-                drawableMenu.display(e.getScreenX(), e.getSceneY(), e.getX(), e.getY());
-                return;
-            }
-
-            if (drawableState == DrawableState.NONE) {
-
-                panStartX = e.getSceneX() - this.getTranslateX();
-                panStartY = e.getSceneY() - this.getTranslateY();
-
-                return;
-
-            }
-
-            anchorX = e.getX();
-            anchorY = e.getY();
-
-            if (drawableState == DrawableState.SHAPE_SQUARE) {
-                activeSquare = new SquareDrawable(this, anchorX, anchorY, 0, 0);
-                this.getChildren().add(activeSquare);
-                addDrawableToList(activeSquare);
-            } else if (drawableState == DrawableState.SHAPE_CIRCLE) {
-                activeCircle = new CircleDrawable(this, anchorX, anchorY, 0, 0);
-                this.getChildren().add(activeCircle);
-                addDrawableToList(activeCircle);
-            } else if (drawableState == DrawableState.STROKE) {
-                activeStroke = new StrokeDrawable(this, anchorX, anchorY);
-                this.getChildren().add(activeStroke);
-                addDrawableToList(activeStroke);
-            } else if (drawableState == DrawableState.TEXT) {
-                activeText = new TextDrawable(inputTextData, this, e.getX(), e.getY());
-                this.getChildren().add(activeText);
-                addDrawableToList(activeText);
-            }
-        });
-
-        this.setOnMouseDragged(e -> {
-
-            if (e.isPopupTrigger()) return;
-
-            // mouseDragged
-            if (drawableState == DrawableState.NONE) {
-
-                this.setTranslateX(e.getSceneX() - panStartX);
-                this.setTranslateY(e.getSceneY() - panStartY);
-                return;
-            }
-
-            if (Objects.requireNonNull(drawableState) == DrawableState.SHAPE_SQUARE) {
-                if (activeSquare == null) return;
-
-                double x = Math.min(e.getX(), anchorX);
-                double y = Math.min(e.getY(), anchorY);
-                double width = Math.abs(e.getX() - anchorX);
-                double height = Math.abs(e.getY() - anchorY);
-
-                activeSquare.update(x, y, width, height);
-            } else if (drawableState == DrawableState.SHAPE_CIRCLE) {
-                if (activeCircle == null) return;
-
-                double x = Math.min(e.getX(), anchorX);
-                double y = Math.min(e.getY(), anchorY);
-                double height = Math.abs(e.getY() - anchorY);
-                double width = Math.abs(e.getX() - anchorX);
-
-                activeCircle.update(width, height);
-
-            } else if (drawableState == DrawableState.STROKE) {
-
-                if (activeStroke == null) return;
-
-                activeStroke.addPoint(e.getX(), e.getY());
-
-            } else if (drawableState == DrawableState.TEXT) {
-                double width = Math.abs(e.getX() - anchorX);
-                double height = Math.abs(e.getY() - anchorY);
-
-                activeText.update(width, height);
-            }
-
-        });
+        this.setOnMousePressed(e -> mouseEventHandler.handleMousePressed(e));
+        this.setOnMouseDragged(e -> mouseEventHandler.handleMouseDrag(e));
 
         this.setOnMouseReleased(e -> {
             activeSquare = null;
@@ -161,7 +69,6 @@ public class CanvasPanel extends Group {
     public void createUI() {
         strokeSizePreviewCircle = new Circle(1500, 1500, drawableSize);
         strokeSizePreviewCircle.setFill(Color.WHITE);
-
 
         canvas = new Canvas(canvasSize, canvasSize);
         this.getChildren().add(canvas);

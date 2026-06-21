@@ -3,6 +3,7 @@
 - Added tooltips on UI elements
 - added reset all drawings button
 - Added dynamic text resizing during creation
+- Added option to modify text once it has been added
 
 - fixed bug where pasting/duplicating sometimes wouldnt work
 - fixed bug where circles were not following the selected color
