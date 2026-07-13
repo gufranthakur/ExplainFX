@@ -40,6 +40,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 
     implementation("io.github.mkpaz:atlantafx-base:2.1.0")
+    implementation("com.google.code.gson:gson:2.11.0")
 }
 
 tasks.withType<Test> {
