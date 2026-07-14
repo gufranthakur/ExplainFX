@@ -1,4 +1,4 @@
-package explainfx.core;
+package explainfx.manager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

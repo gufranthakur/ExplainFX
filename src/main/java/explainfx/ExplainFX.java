@@ -2,7 +2,8 @@ package explainfx;
 
 
 import atlantafx.base.theme.CupertinoDark;
-import explainfx.core.DataManager;
+import explainfx.manager.DataManager;
+import explainfx.manager.KeyboardShortcutManager;
 import explainfx.panels.CanvasPanel;
 import explainfx.panels.ControlPanel;
 import javafx.application.Application;
@@ -18,11 +19,13 @@ import java.awt.*;
 public class ExplainFX extends Application {
 
     private Stage stage;
+    private Scene rootScene;
     private StackPane rootPane;
 
     private ControlPanel controlPanel;
     private CanvasPanel canvasPanel;
     private DataManager dataManager;
+    private KeyboardShortcutManager keyboardShortcutManager;
 
     public static void main(String[] args) {
         Application.setUserAgentStylesheet(new CupertinoDark().getUserAgentStylesheet());
@@ -44,7 +47,7 @@ public class ExplainFX extends Application {
     }
 
     public void createComponents() {
-        dataManager = new DataManager(this);
+
 
         rootPane = new StackPane();
 
@@ -54,16 +57,23 @@ public class ExplainFX extends Application {
         controlPanel.setPrefSize(400, 100);
         controlPanel.setMaxHeight(100);
 
+
+
         rootPane.getChildren().add(canvasPanel);
         rootPane.getChildren().add(controlPanel);
         rootPane.setPadding(new Insets(0, 0, 20, 0));
         StackPane.setAlignment(controlPanel, Pos.BOTTOM_CENTER);
 
+        rootScene = new Scene(rootPane, 1280, 720);
+
+
+        dataManager = new DataManager(this);
+        keyboardShortcutManager = new KeyboardShortcutManager(this);
     }
 
     public void createWindow(Stage stage) {
         this.stage = stage;
-        Scene rootScene = new Scene(rootPane, 1280, 720);
+
         stage = new Stage();
         stage.setScene(rootScene);
         stage.setTitle("ExplainFX");
@@ -83,5 +93,7 @@ public class ExplainFX extends Application {
     public Stage getStage() {
         return stage;
     }
+
+    public Scene getRootScene() {return rootScene;}
 
 }
