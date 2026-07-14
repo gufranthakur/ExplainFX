@@ -11,7 +11,7 @@ public class DrawableMenu extends ContextMenu {
     private double x, y;
 
     private CanvasPanel canvasPanel;
-    private MenuItem copyItem, pasteItem, duplicateItem, lockItem, unlockItem, deleteItem, backItem;
+    private MenuItem copyItem, pasteItem, duplicateItem, lockItem, unlockItem, saveItem, loadItem, deleteItem, backItem;
 
     public DrawableMenu(CanvasPanel canvasPanel) {
         this.canvasPanel = canvasPanel;
@@ -25,6 +25,9 @@ public class DrawableMenu extends ContextMenu {
         duplicateItem = new MenuItem("Duplicate");
         lockItem = new MenuItem("Lock");
         unlockItem = new MenuItem("Unlock");
+        saveItem = new MenuItem("Save");
+        loadItem = new MenuItem("Load");
+        deleteItem = new  MenuItem("Delete");
         deleteItem = new MenuItem("Delete");
         backItem = new MenuItem("Back");
 
@@ -37,6 +40,9 @@ public class DrawableMenu extends ContextMenu {
             canvasPanel.pasteCopiedDrawable(canvasPanel.getCopiedDrawable().getX() + 100, canvasPanel.getCopiedDrawable().getY() + 100);
         });
 
+        saveItem.setOnAction(e -> canvasPanel.getExplainFX().getDataManager().saveData(canvasPanel.getDrawables()));
+        loadItem.setOnAction(e -> canvasPanel.explainFX.getDataManager().loadData(canvasPanel));
+
         deleteItem.setOnAction(e -> deleteDrawableItem());
         lockItem.setOnAction(e -> canvasPanel.getSelectedDrawable().lockDrawable());
         unlockItem.setOnAction(e -> canvasPanel.getSelectedDrawable().unlockDrawable());
@@ -44,6 +50,8 @@ public class DrawableMenu extends ContextMenu {
         this.getItems().addAll(copyItem, pasteItem, duplicateItem,
                 new SeparatorMenuItem(),
                 lockItem, unlockItem,
+                new  SeparatorMenuItem(),
+                saveItem, loadItem,
                 new SeparatorMenuItem(),
                 deleteItem,
                 new SeparatorMenuItem(),

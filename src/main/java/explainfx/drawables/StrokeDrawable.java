@@ -6,26 +6,53 @@ import javafx.scene.shape.Polyline;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
 
-public class StrokeDrawable extends Drawable{
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
-    private CanvasPanel canvasPanel;
-    private Polyline polyline;
+public class StrokeDrawable extends Drawable {
 
-    private double lastX = Double.NaN;
-    private double lastY = Double.NaN;
+    private transient Polyline polyline;
+
+    private List<Double> points = new ArrayList<>();
+    private double strokeWidth;
+
+    private transient double lastX = Double.NaN;
+    private transient double lastY = Double.NaN;
     private static final double SMOOTHING = 0.3;
 
     public StrokeDrawable(CanvasPanel canvasPanel, double x, double y) {
         super(canvasPanel, x, y, 0, 0);
-        this.canvasPanel = canvasPanel;
+        this.strokeWidth = canvasPanel.drawableSize;
+        this.setLayoutX(x);
+        this.setLayoutY(y);
+        buildPolyline();
+    }
+
+    // Used by duplicate() — takes an existing Polyline's points directly
+    public StrokeDrawable(CanvasPanel canvasPanel, double x, double y, Polyline sourcePolyline) {
+        super(canvasPanel, x, y, 0, 0);
+        this.strokeWidth = sourcePolyline.getStrokeWidth();
+        setDrawableColor((Color) sourcePolyline.getStroke());
+
+        for (Double p : sourcePolyline.getPoints()) {
+            points.add(p);
+        }
+
+        this.setLayoutX(x);
+        this.setLayoutY(y);
+        buildPolyline();
+    }
+
+    private void buildPolyline() {
         polyline = new Polyline();
-        polyline.setStroke(drawableColor);
-        polyline.setStrokeWidth(canvasPanel.drawableSize);
+        polyline.setStroke(getDrawableColor());
+        polyline.setStrokeWidth(strokeWidth);
         polyline.setSmooth(true);
         polyline.setStrokeLineCap(StrokeLineCap.ROUND);
         polyline.setStrokeLineJoin(StrokeLineJoin.ROUND);
-        this.setLayoutX(x);
-        this.setLayoutY(y);
+        polyline.getPoints().addAll(points); // restores points if loaded, no-op if empty
+
         this.getChildren().add(polyline);
 
         this.setOnMouseEntered(e -> {
@@ -34,26 +61,7 @@ public class StrokeDrawable extends Drawable{
         });
 
         this.setOnMouseExited(e -> {
-            polyline.setStroke(drawableColor);
-            canvasPanel.setSelectedDrawable(null);
-        });
-
-    }
-    public StrokeDrawable(CanvasPanel canvasPanel, double x, double y, Polyline polyline) {
-        super(canvasPanel, x, y, 0, 0);
-        this.canvasPanel = canvasPanel;
-
-        this.setLayoutX(x);
-        this.setLayoutY(y);
-        this.getChildren().add(polyline);
-
-        this.setOnMouseEntered(e -> {
-            polyline.setStroke(hoveredColor);
-            canvasPanel.setSelectedDrawable(this);
-        });
-
-        this.setOnMouseExited(e -> {
-            polyline.setStroke(drawableColor);
+            polyline.setStroke(getDrawableColor());
             canvasPanel.setSelectedDrawable(null);
         });
     }
@@ -63,31 +71,39 @@ public class StrokeDrawable extends Drawable{
         double localY = y - this.getLayoutY();
 
         if (Double.isNaN(lastX)) {
-            // First point — no smoothing yet
             lastX = localX;
             lastY = localY;
         } else {
-            // Exponential moving average
             lastX = lastX + SMOOTHING * (localX - lastX);
             lastY = lastY + SMOOTHING * (localY - lastY);
         }
 
         polyline.getPoints().addAll(lastX, lastY);
+        points.add(lastX);
+        points.add(lastY);
+    }
+
+    @Override
+    public void rebuildVisual(CanvasPanel canvasPanel) {
+        wireHandlers(canvasPanel);
+        setDrawableColor(hexToColor(getDrawableColorHex()));
+        this.getChildren().clear();
+        buildPolyline();
     }
 
     public StrokeDrawable duplicate(double x, double y, Polyline polyline) {
-        Polyline newPolyline = new Polyline();
-        newPolyline.setStroke(getPolyline().getStroke());
-        newPolyline.setStrokeWidth(getPolyline().getStrokeWidth());
-        newPolyline.setSmooth(true);
-        newPolyline.setStrokeLineCap(StrokeLineCap.ROUND);
-        newPolyline.setStrokeLineJoin(StrokeLineJoin.ROUND);
-        newPolyline.getPoints().addAll(getPolyline().getPoints());
-        return new StrokeDrawable(canvasPanel, x, y, newPolyline);
+        return new StrokeDrawable(canvasPanel, x, y, polyline);
     }
 
     public Polyline getPolyline() {
         return polyline;
     }
 
+    public double getStrokeWidth() {
+        return strokeWidth;
+    }
+
+    public List<Double> getPoints() {
+        return points;
+    }
 }

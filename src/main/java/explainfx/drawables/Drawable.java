@@ -6,18 +6,19 @@ import javafx.scene.paint.Color;
 
 public abstract class Drawable extends Group {
 
-    private CanvasPanel canvasPanel;
+    protected transient CanvasPanel canvasPanel;
     private double x, y;
     private double width, height;
 
     private boolean isLocked = false;
 
-    protected double dragOffSetX, dragOffSetY;
-    protected Color borderColor = Color.WHITE;
+    protected transient double dragOffSetX, dragOffSetY;
+    protected transient Color borderColor = Color.WHITE;
+    protected transient Color hoveredColor = Color.rgb(237, 113, 104);
 
-    protected Color hoveredColor = Color.rgb(237, 113, 104);
-    protected Color drawableColor;
-
+    // Color is a JavaFX Paint object -> not Gson-safe. Store as hex, rebuild the Color at runtime.
+    private String drawableColorHex;
+    protected transient Color drawableColor;
 
     public Drawable(CanvasPanel canvasPanel, double x, double y, double width, double height) {
         this.x = x;
@@ -27,28 +28,31 @@ public abstract class Drawable extends Group {
         this.canvasPanel = canvasPanel;
 
         this.drawableColor = canvasPanel.selectedColor;
+        this.drawableColorHex = colorToHex(drawableColor);
+
+        wireHandlers(canvasPanel);
+    }
+
+    // Shared mouse handler wiring, callable again after deserialization
+    protected void wireHandlers(CanvasPanel canvasPanel) {
+        this.canvasPanel = canvasPanel;
 
         this.setOnMouseEntered(e -> {
             canvasPanel.setSelectedDrawable(this);
-            System.out.println("Entered");
             borderColor = Color.RED;
         });
 
         this.setOnMouseExited(e -> {
             borderColor = Color.WHITE;
-            System.out.println("Exited");
         });
 
         this.setOnMousePressed(e -> {
             dragOffSetX = e.getX();
             dragOffSetY = e.getY();
-
         });
 
         this.setOnMouseDragged(e -> {
-
             if (isLocked) return;
-
             if (canvasPanel.getDrawableState() != CanvasPanel.DrawableState.VIEW_MODE) return;
             this.setLayoutX(this.getLayoutX() + e.getX() - dragOffSetX);
             this.setLayoutY(this.getLayoutY() + e.getY() - dragOffSetY);
@@ -56,48 +60,40 @@ public abstract class Drawable extends Group {
         });
     }
 
+    // Every subclass rebuilds its own JavaFX shape + re-wires handlers after Gson load
+    public abstract void rebuildVisual(CanvasPanel canvasPanel);
+
+    protected static String colorToHex(Color color) {
+        return color.toString(); // e.g. "0x336699ff" — Color.web() can parse this back
+    }
+
+    protected static Color hexToColor(String hex) {
+        return Color.web(hex);
+    }
+
     //----------Getters and setters-------------//
 
-    public double getX() {
-        return x;
+    public double getX() { return x; }
+    public void setX(double x) { this.x = x; }
+
+    public double getY() { return y; }
+    public void setY(double y) { this.y = y; }
+
+    public double getWidth() { return width; }
+    public void setWidth(double width) { this.width = width; }
+
+    public double getHeight() { return height; }
+    public void setHeight(double height) { this.height = height; }
+
+    public String getDrawableColorHex() { return drawableColorHex; }
+
+    public Color getDrawableColor() { return drawableColor; }
+
+    public void setDrawableColor(Color color) {
+        this.drawableColor = color;
+        this.drawableColorHex = colorToHex(color);
     }
 
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
-    public double getWidth() {
-        return width;
-    }
-
-    public void setWidth(double width) {
-        this.width = width;
-    }
-
-    public double getHeight() {
-        return height;
-    }
-
-    public void setHeight(double height) {
-        this.height = height;
-    }
-
-    public void lockDrawable() {
-        isLocked = true;
-    }
-
-    public void unlockDrawable() {
-        isLocked = false;
-    }
-
-
-
+    public void lockDrawable() { isLocked = true; }
+    public void unlockDrawable() { isLocked = false; }
 }

@@ -3,8 +3,10 @@ module explainfx {
     requires javafx.fxml;
     requires atlantafx.base;
     requires java.desktop;
+    requires com.google.gson;
 
 
-    opens explainfx to javafx.fxml;
+    opens explainfx.drawables to com.google.gson;
+    exports explainfx.drawables;
     exports explainfx;
 }

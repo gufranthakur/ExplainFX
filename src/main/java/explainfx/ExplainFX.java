@@ -2,6 +2,7 @@ package explainfx;
 
 
 import atlantafx.base.theme.CupertinoDark;
+import explainfx.core.DataManager;
 import explainfx.panels.CanvasPanel;
 import explainfx.panels.ControlPanel;
 import javafx.application.Application;
@@ -16,10 +17,12 @@ import java.awt.*;
 
 public class ExplainFX extends Application {
 
+    private Stage stage;
     private StackPane rootPane;
 
     private ControlPanel controlPanel;
     private CanvasPanel canvasPanel;
+    private DataManager dataManager;
 
     public static void main(String[] args) {
         Application.setUserAgentStylesheet(new CupertinoDark().getUserAgentStylesheet());
@@ -41,6 +44,8 @@ public class ExplainFX extends Application {
     }
 
     public void createComponents() {
+        dataManager = new DataManager(this);
+
         rootPane = new StackPane();
 
         canvasPanel = new CanvasPanel(this);
@@ -57,6 +62,7 @@ public class ExplainFX extends Application {
     }
 
     public void createWindow(Stage stage) {
+        this.stage = stage;
         Scene rootScene = new Scene(rootPane, 1280, 720);
         stage = new Stage();
         stage.setScene(rootScene);
@@ -70,6 +76,12 @@ public class ExplainFX extends Application {
 
     public CanvasPanel getCanvasPanel() {
         return canvasPanel;
+    }
+
+    public DataManager getDataManager() {return dataManager;}
+
+    public Stage getStage() {
+        return stage;
     }
 
 }

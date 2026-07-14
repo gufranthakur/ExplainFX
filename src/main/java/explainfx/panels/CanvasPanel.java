@@ -8,6 +8,8 @@ import explainfx.ui.DrawableMenu;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -136,6 +138,24 @@ public class CanvasPanel extends Group {
 
     }
 
+    public void placeLoadedDrawables(ArrayList<Drawable> loadedDrawables) {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Clear canvas");
+        alert.setHeaderText(null);
+        alert.setContentText("You must clear the current canvas, before loading a new one");
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) explainFX.getCanvasPanel().clearAllDrawables();
+
+            for (Drawable d : loadedDrawables) {
+                drawables.add(d);
+                this.getChildren().add(d);
+            }
+        });
+
+    }
+
     public void setInputTextData(String data) {
         this.inputTextData = data;
     }
@@ -188,4 +208,5 @@ public class CanvasPanel extends Group {
     public Canvas getCanvas() {
         return canvas;
     }
+    public ExplainFX getExplainFX() {return explainFX; }
 }
