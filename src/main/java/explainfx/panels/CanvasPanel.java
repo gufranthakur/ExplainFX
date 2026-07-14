@@ -15,6 +15,7 @@ import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 public class CanvasPanel extends Group {
 
@@ -31,6 +32,7 @@ public class CanvasPanel extends Group {
     private Drawable selectedDrawable;
     private DrawableState drawableState;
     public ArrayList<Drawable> drawables;
+    public ArrayList<Drawable> undoActionDrawables;
     private Drawable copiedDrawable;
     // Active Elements, used for keeping track of what the user is drawing right now. //
     public SquareDrawable activeSquare;
@@ -55,6 +57,7 @@ public class CanvasPanel extends Group {
 
         drawableMenu = new DrawableMenu(this);
         drawables = new ArrayList<>(20);
+        undoActionDrawables = new ArrayList<>(20);
 
         drawableState = DrawableState.VIEW_MODE;
 
@@ -154,6 +157,35 @@ public class CanvasPanel extends Group {
             }
         });
 
+    }
+
+    public void undoLastAction() {
+        try {
+            Drawable drawable = drawables.getLast();
+            if (drawable == null) return;
+
+            drawables.remove(drawable);
+            undoActionDrawables.add(drawable);
+
+            this.getChildren().remove(drawable);
+        } catch (NoSuchElementException e) {
+            System.out.println("Nothing to undo");
+        }
+
+    }
+
+    public void redoLastAction() {
+        try {
+            Drawable drawable = undoActionDrawables.getLast();
+            if (drawable == null) return;
+
+            undoActionDrawables.remove(drawable);
+            drawables.add(drawable);
+
+            this.getChildren().add(drawable);
+        } catch (NoSuchElementException e) {
+            System.out.println("Nothing to redo");
+        }
     }
 
     public void setInputTextData(String data) {
